@@ -1,0 +1,81 @@
+group 'org.fieldservice'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'idea'
+apply plugin: 'maven'
+apply plugin: 'java'
+apply plugin: 'war'
+
+ext.jbossHome = hasProperty('jbossHome') ? jbossHome : "${rootDir}/wildfly-10.1.0.Final"
+
+ext.libraryVersions = [
+        javaee                  : '7.0',
+        wildfly                 : '8.2.1.Final',
+        junit                   : '4.12',
+        arquillian              : '1.1.11.Final',
+        shrinkWrapResolverGradle: '2.2.2'
+]
+
+repositories {
+    maven { url 'http://repository.jboss.org/nexus/content/groups/public' }
+    maven { url 'http://repository.jboss.org/nexus/content/repositories/deprecated' }
+    maven { url 'http://repo.jfrog.org/artifactory/repo' }
+    maven { url 'https://mvnrepository.com/artifact/org.wildfly/wildfly-arquillian-container-managed' }
+    maven { url 'https://mvnrepository.com/artifact/org.hibernate/hibernate-core' }
+    mavenCentral()
+}
+
+configurations {
+    provided
+    compile.extendsFrom provided
+}
+
+sourceSets {
+    main {
+        runtimeClasspath += configurations.provided
+        compileClasspath += configurations.provided
+        test.compileClasspath += configurations.provided
+        test.runtimeClasspath += configurations.provided
+    }
+}
+
+// if you use 'idea' plugin, otherwise fails with: Could not find method idea() for arguments...
+idea {
+    module {
+        /*
+         * If you omit [ ] around, it fails with: Cannot change configuration ':provided' after it has been resolved
+         * This is due Gradle 2.x using Groovy 2.3 that does not allow += for single elements addition.
+         * More: https://discuss.gradle.org/t/custom-provided-configuration-not-working-with-gradle-2-0-rc2-in-multi-project-mode/2459
+         */
+        scopes.PROVIDED.plus += [configurations.provided]
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+
+dependencies {
+    compile "org.apache.logging.log4j:log4j-api:2.0-rc1",
+            "org.apache.logging.log4j:log4j-core:2.0-rc1",
+            "com.google.guava:guava:19.0",
+//            "org.hibernate:hibernate-core:5.0.10.Final",
+            "javax:javaee-api:${libraryVersions.javaee}"
+
+    testCompile "junit:junit:${libraryVersions.junit}",
+                "org.jboss.arquillian:arquillian-bom:${libraryVersions.arquillian}",
+                "org.jboss.arquillian.extension:arquillian-rest-client-impl-jersey:1.0.0.Alpha4",
+                "org.jboss.arquillian.junit:arquillian-junit-container:${libraryVersions.arquillian}",
+                "org.jboss.arquillian.protocol:arquillian-protocol-servlet:${libraryVersions.arquillian}",
+                "org.wildfly:wildfly-arquillian-container-managed:${libraryVersions.wildfly}",
+                "org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-gradle-depchain:${libraryVersions.shrinkWrapResolverGradle}"
+}
+
+test {
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+        exceptionFormat = 'full'
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.9'
+}
