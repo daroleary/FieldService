@@ -25,7 +25,7 @@ import static org.junit.Assert.assertTrue;
  * Both of which can be resolved with more time.
  */
 @RunWith(Arquillian.class)
-public class EquipmentAdminBeanIntTest {
+public class EquipmentBeanIntTest {
 
     @Deployment
     public static WebArchive createDeployment() {

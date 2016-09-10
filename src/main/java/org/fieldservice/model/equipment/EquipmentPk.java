@@ -26,6 +26,10 @@ public class EquipmentPk implements LongPk {
         return new EquipmentPk(id);
     }
 
+    public static EquipmentPk getPKorNull(Long id) {
+        return id == null ? null : of(id);
+    }
+
     public Long getEquipmentId() {
         return _equipmentId;
     }

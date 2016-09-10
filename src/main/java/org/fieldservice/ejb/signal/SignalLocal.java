@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import org.fieldservice.model.equipment.EquipmentPk;
 import org.fieldservice.model.signal.Signal;
 import org.fieldservice.model.signal.SignalPk;
-import org.fieldservice.model.signals.DailySignals;
+import org.fieldservice.model.signals.Signals;
 
 import javax.ejb.Local;
 import java.util.List;
@@ -22,5 +22,5 @@ public interface SignalLocal {
 
     List<Signal> getSignalsFrom(EquipmentPk equipmentPk);
 
-    ImmutableList<DailySignals> getDailySignalsFrom(EquipmentPk equipmentPk);
+    <T extends Signals> ImmutableList<T> getSignalsFrom(Class<T> clazz, EquipmentPk equipmentPk);
 }

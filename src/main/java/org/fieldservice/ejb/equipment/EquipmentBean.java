@@ -9,9 +9,9 @@ import javax.ejb.Stateless;
 import javax.persistence.Query;
 
 @Stateless
-public class EquipmentAdminBean extends EJB3Adapter<EquipmentPk, Equipment> implements EquipmentLocal, EquipmentRemote {
+public class EquipmentBean extends EJB3Adapter<EquipmentPk, Equipment> implements EquipmentLocal, EquipmentRemote {
 
-    public EquipmentAdminBean() {
+    public EquipmentBean() {
         super(Equipment.class);
     }
 

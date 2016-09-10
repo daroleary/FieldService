@@ -4,14 +4,14 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Date;
 
-public class DailySignals extends Signals {
+public class DailySignal extends Signals {
 
     private LocalDate _entryDate;
 
-    public DailySignals(int statusCodeCount,
-                        Long equipmentId,
-                        String equipmentStatus,
-                        Date entryDate) {
+    public DailySignal(int statusCodeCount,
+                       Long equipmentId,
+                       String equipmentStatus,
+                       Date entryDate) {
         super(statusCodeCount, equipmentId, equipmentStatus);
         _entryDate = ((Timestamp) entryDate).toLocalDateTime().toLocalDate();
     }

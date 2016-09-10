@@ -26,6 +26,10 @@ public class SignalPk implements LongPk {
         return new SignalPk(id);
     }
 
+    public static SignalPk getPKorNull(Long id) {
+        return id == null ? null : of(id);
+    }
+
     public Long getSignalId() {
         return _signalId;
     }

@@ -7,7 +7,9 @@ import org.fieldservice.model.equipment.Equipment;
 import org.fieldservice.model.equipment.EquipmentPk;
 import org.fieldservice.model.signal.EquipmentStatusCode;
 import org.fieldservice.model.signal.Signal;
-import org.fieldservice.model.signals.DailySignals;
+import org.fieldservice.model.signals.DailySignal;
+import org.fieldservice.model.signals.MonthlySignal;
+import org.fieldservice.model.signals.YearlySignal;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -18,7 +20,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -29,7 +30,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
-public class SignalAdminBeanIntTest {
+public class SignalBeanIntTest {
 
     @EJB
     SignalRemote _signalAdmin;
@@ -38,7 +39,7 @@ public class SignalAdminBeanIntTest {
 
     private static final String ASSET_NUMBER = "AssetNumber";
     private static final LocalDateTime ENTRY_DATE_TIME =
-            LocalDateTime.of(LocalDate.of(2016, Month.JANUARY, 1), LocalTime.of(12, 0));
+            LocalDateTime.of(LocalDate.of(2016, Month.JANUARY, 1), LocalTime.of(0, 0));
     private static final EquipmentStatusCode STATUS_CODE = EquipmentStatusCode.ACTIVE;
 
     @Deployment
@@ -100,13 +101,84 @@ public class SignalAdminBeanIntTest {
         Equipment equipment = createEquipment(ASSET_NUMBER);
         createSignal(equipment);
         createSignal(equipment);
+        LocalDateTime entryDateTimePlusOneDay = ENTRY_DATE_TIME.plusDays(1);
+        createSignal(equipment, entryDateTimePlusOneDay);
 
         ImmutableList<Signal> signals = getSignals(equipment.getEquipmentPk());
-        assertEquals(2, signals.size());
+        assertEquals(3, signals.size());
 
-        ImmutableList<DailySignals> dailySignals
-                = _signalAdmin.getDailySignalsFrom(equipment.getEquipmentPk());
-        assertEquals(1, dailySignals.size());
+        ImmutableList<DailySignal> dailySignals
+                = _signalAdmin.getSignalsFrom(DailySignal.class, equipment.getEquipmentPk());
+
+        assertEquals(2, dailySignals.size());
+        DailySignal dailySignal = dailySignals.get(0);
+        assertDailySignal(2, ENTRY_DATE_TIME, dailySignal);
+        dailySignal = dailySignals.get(1);
+        assertDailySignal(1, entryDateTimePlusOneDay, dailySignal);
+
+        ImmutableList<DailySignal> dailySignalsNoEquipmentPk
+                = _signalAdmin.getSignalsFrom(DailySignal.class, equipment.getEquipmentPk());
+        assertEquals(2, dailySignalsNoEquipmentPk.size());
+
+        DailySignal dailySignalNoEquipmentPk = dailySignals.get(0);
+        assertDailySignal(2, ENTRY_DATE_TIME, dailySignalNoEquipmentPk);
+
+        dailySignalNoEquipmentPk = dailySignals.get(1);
+        assertDailySignal(1, entryDateTimePlusOneDay, dailySignalNoEquipmentPk);
+    }
+
+    @Test
+    public void getYearlySignalsFrom_withEquipment_returnsYearlySignals() {
+        Equipment equipment = createEquipment(ASSET_NUMBER);
+        createSignal(equipment);
+        createSignal(equipment, ENTRY_DATE_TIME.plusMonths(6));
+        LocalDateTime entryDateTimePlusOneYear = ENTRY_DATE_TIME.plusYears(1);
+        createSignal(equipment, entryDateTimePlusOneYear);
+
+        ImmutableList<Signal> signals = getSignals(equipment.getEquipmentPk());
+        assertEquals(3, signals.size());
+
+        ImmutableList<YearlySignal> yearlySignals
+                = _signalAdmin.getSignalsFrom(YearlySignal.class, equipment.getEquipmentPk());
+
+        assertEquals(2, yearlySignals.size());
+        YearlySignal yearlySignal = yearlySignals.get(0);
+        assertYearlySignal(2, ENTRY_DATE_TIME, yearlySignal);
+        yearlySignal = yearlySignals.get(1);
+        assertYearlySignal(1, entryDateTimePlusOneYear, yearlySignal);
+
+        ImmutableList<YearlySignal> yearlySignalsNoEquipmentPk
+                = _signalAdmin.getSignalsFrom(YearlySignal.class, equipment.getEquipmentPk());
+        assertEquals(2, yearlySignalsNoEquipmentPk.size());
+
+        YearlySignal yearlySignalNoEquipmentPk = yearlySignals.get(0);
+        assertYearlySignal(2, ENTRY_DATE_TIME, yearlySignalNoEquipmentPk);
+
+        yearlySignalNoEquipmentPk = yearlySignals.get(1);
+        assertYearlySignal(1, entryDateTimePlusOneYear, yearlySignalNoEquipmentPk);
+    }
+
+
+    private void assertDailySignal(int expectedStatusCodeCount,
+                                   LocalDateTime expectedEntryTimeDate,
+                                   DailySignal dailySignal) {
+        assertEquals(expectedStatusCodeCount, dailySignal.getStatusCodeCount());
+        assertEquals(expectedEntryTimeDate.toLocalDate(), dailySignal.getEntryDate());
+    }
+
+    private void assertMonthlySignal(int expectedStatusCodeCount,
+                                     LocalDateTime expectedEntryTimeDate,
+                                     MonthlySignal monthlySignal) {
+        assertEquals(expectedStatusCodeCount, monthlySignal.getStatusCodeCount());
+        assertEquals(expectedEntryTimeDate.getMonth(), monthlySignal.getMonth());
+        assertEquals(expectedEntryTimeDate.getYear(), monthlySignal.getYear());
+    }
+
+    private void assertYearlySignal(int expectedStatusCodeCount,
+                                    LocalDateTime expectedEntryTimeDate,
+                                    YearlySignal yearlySignal) {
+        assertEquals(expectedStatusCodeCount, yearlySignal.getStatusCodeCount());
+        assertEquals(expectedEntryTimeDate.getYear(), yearlySignal.getYear());
     }
 
     private Equipment createEquipment(String assetNumber) {
@@ -119,17 +191,25 @@ public class SignalAdminBeanIntTest {
     }
 
     private void createSignal(Equipment equipment) {
+        createSignal(equipment, ENTRY_DATE_TIME);
+    }
+
+    private void createSignal(Equipment equipment, LocalDateTime entryDateTime) {
         Signal signal = new Signal();
         signal.setEquipment(equipment);
         signal.setEquipmentStatusCode(STATUS_CODE);
-        signal.setEntryDateTime(ENTRY_DATE_TIME);
+        signal.setEntryDateTime(entryDateTime);
 
         _signalAdmin.create(signal);
     }
 
     private Signal getSignal(Equipment equipment) {
+        return getSignal(equipment, ENTRY_DATE_TIME);
+    }
 
-        createSignal(equipment);
+    private Signal getSignal(Equipment equipment, LocalDateTime entryDateTime) {
+
+        createSignal(equipment, entryDateTime);
         //noinspection OptionalGetWithoutIsPresent
         return Iterables.getOnlyElement(_signalAdmin.getSignalsFrom(equipment.getEquipmentPk()));
     }
