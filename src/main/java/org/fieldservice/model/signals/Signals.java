@@ -1,6 +1,5 @@
 package org.fieldservice.model.signals;
 
-import org.fieldservice.model.equipment.EquipmentPk;
 import org.fieldservice.model.signal.EquipmentStatusCode;
 
 import java.io.Serializable;
@@ -8,14 +7,14 @@ import java.io.Serializable;
 public abstract class Signals implements Serializable {
 
     private int _statusCodeCount;
-    private EquipmentPk _equipmentPk;
+    private Long _equipmentId;
     private EquipmentStatusCode _equipmentStatusCode;
 
     public Signals(int statusCodeCount,
                    Long equipmentId,
                    String equipmentStatus) {
         _statusCodeCount = statusCodeCount;
-        _equipmentPk = EquipmentPk.of(equipmentId);
+        _equipmentId = equipmentId;
         _equipmentStatusCode = EquipmentStatusCode.valueOf(equipmentStatus);
     }
 
@@ -27,12 +26,12 @@ public abstract class Signals implements Serializable {
         _statusCodeCount = statusCodeCount;
     }
 
-    public EquipmentPk getEquipment() {
-        return _equipmentPk;
+    public Long getEquipmentId() {
+        return _equipmentId;
     }
 
-    public void setEquipmentPk(EquipmentPk equipmentPk) {
-        _equipmentPk = equipmentPk;
+    public void setEquipmentId(Long equipmentId) {
+        _equipmentId = equipmentId;
     }
 
     public EquipmentStatusCode getEquipmentStatusCode() {

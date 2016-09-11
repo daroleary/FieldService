@@ -13,12 +13,12 @@
             <property name="hibernate.format_sql" value="true"/>
             <property name="hbm2ddl.auto" value="update"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
-            <property name="javax.persistence.schema-generation.create-script-source"
-                      value="META-INF/create.sql"/>
-            <property name="javax.persistence.schema-generation.drop-script-source"
-                      value="META-INF/drop.sql"/>
-            <property name="javax.persistence.sql-load-script-source"
-                      value="META-INF/load.sql"/>
+            <!--<property name="javax.persistence.schema-generation.create-script-source"-->
+                      <!--value="META-INF/create.sql"/>-->
+            <!--<property name="javax.persistence.schema-generation.drop-script-source"-->
+                      <!--value="META-INF/drop.sql"/>-->
+            <!--<property name="javax.persistence.sql-load-script-source"-->
+                      <!--value="META-INF/load.sql"/>-->
         </properties>
     </persistence-unit>
 </persistence>

@@ -1,26 +1,24 @@
 package org.fieldservice.model.signals;
 
-import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.util.Date;
 
 public class DailySignal extends Signals {
 
-    private LocalDate _entryDate;
+    private Date _entryDate;
 
     public DailySignal(int statusCodeCount,
                        Long equipmentId,
                        String equipmentStatus,
                        Date entryDate) {
         super(statusCodeCount, equipmentId, equipmentStatus);
-        _entryDate = ((Timestamp) entryDate).toLocalDateTime().toLocalDate();
+        _entryDate = entryDate;
     }
 
-    public LocalDate getEntryDate() {
+    public Date getEntryDate() {
         return _entryDate;
     }
 
-    public void setEntryDate(LocalDate entryDate) {
+    public void setEntryDate(Date entryDate) {
         _entryDate = entryDate;
     }
 }
