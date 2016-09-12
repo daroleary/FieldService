@@ -3,6 +3,7 @@ package org.fieldservice.ejb.equipment;
 import com.google.common.collect.ImmutableList;
 import org.fieldservice.model.equipment.Equipment;
 import org.fieldservice.model.equipment.EquipmentPk;
+import org.fieldservice.model.signals.EquipmentSimple;
 
 import javax.ejb.Remote;
 import javax.ws.rs.GET;
@@ -35,4 +36,9 @@ public interface EquipmentRemote {
     @Path("assetNumber/{id}")
     @Produces({"application/json"})
     Equipment getEquipmentFrom(@PathParam("id") String assetNumber);
+
+    @GET
+    @Path("simple")
+    @Produces({"application/json"})
+    ImmutableList<EquipmentSimple> getAllEquipmentSimple();
 }

@@ -40,17 +40,32 @@ public interface SignalRemote {
     ImmutableList<Signal> getSignalsFrom(EquipmentPk equipmentPk);
 
     @GET
-    @Path("daily/equipment/{id}")
+    @Path("daily/equipments")
+    @Produces({"application/json"})
+    ImmutableList<DailySignal> getDailySignalsFrom();
+
+    @GET
+    @Path("daily/equipments/{id}")
     @Produces({"application/json"})
     ImmutableList<DailySignal> getDailySignalsFrom(@PathParam("id") Long equipmentId);
 
     @GET
-    @Path("monthly/equipment/{id}")
+    @Path("monthly/equipments")
+    @Produces({"application/json"})
+    ImmutableList<MonthlySignal> getMonthlySignalsFrom();
+
+    @GET
+    @Path("monthly/equipments/{id}")
     @Produces({"application/json"})
     ImmutableList<MonthlySignal> getMonthlySignalsFrom(@PathParam("id") Long equipmentId);
 
     @GET
-    @Path("yearly/equipment/{id}")
+    @Path("yearly/equipments")
+    @Produces({"application/json"})
+    ImmutableList<YearlySignal> getYearlySignalsFrom();
+
+    @GET
+    @Path("yearly/equipments/{id}")
     @Produces({"application/json"})
     ImmutableList<YearlySignal> getYearlySignalsFrom(@PathParam("id") Long equipmentId);
 

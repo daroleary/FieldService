@@ -1,13 +1,18 @@
 package org.fieldservice.model.equipment;
 
 import org.fieldservice.model.RootEntity;
+import org.fieldservice.model.signal.Signal;
+import org.fieldservice.model.signals.EquipmentSimple;
 
 import javax.persistence.Column;
+import javax.persistence.ColumnResult;
+import javax.persistence.ConstructorResult;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.PrePersist;
+import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 
 @Entity
@@ -17,9 +22,23 @@ import javax.persistence.Table;
                 query = "SELECT e FROM Equipment e " +
                         "WHERE e._assetNumber = :assetNumber")
 })
+@SqlResultSetMapping(
+        name = Equipment.ALL_EQUIPMENT_SIMPLE,
+        classes = {
+                @ConstructorResult(
+                        targetClass = EquipmentSimple.class,
+                        columns = {
+                                @ColumnResult(name = "equipment_id", type = Long.class),
+                                @ColumnResult(name = "asset_number", type = String.class)
+                        }
+                )
+        }
+)
 public class Equipment implements RootEntity<EquipmentPk> {
 
     public static final String FIND_BY_ASSET_NUMBER = "Equipment.findByAssetNumber";
+    public static final String ALL_EQUIPMENT_SIMPLE = "Equipment.findByAssetNumber";
+
 
     @EmbeddedId
     private EquipmentPk _equipmentPk;

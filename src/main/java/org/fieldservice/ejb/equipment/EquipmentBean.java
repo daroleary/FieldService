@@ -4,9 +4,11 @@ import com.google.common.collect.ImmutableList;
 import org.fieldservice.ejb.EJB3Adapter;
 import org.fieldservice.model.equipment.Equipment;
 import org.fieldservice.model.equipment.EquipmentPk;
+import org.fieldservice.model.signals.EquipmentSimple;
 
 import javax.ejb.Stateless;
 import javax.persistence.Query;
+import java.util.List;
 
 @Stateless
 public class EquipmentBean extends EJB3Adapter<EquipmentPk, Equipment> implements EquipmentLocal, EquipmentRemote {
@@ -51,5 +53,20 @@ public class EquipmentBean extends EJB3Adapter<EquipmentPk, Equipment> implement
         query.setParameter("assetNumber", assetNumber);
 
         return getSingleResult(query);
+    }
+
+    @Override
+    public ImmutableList<EquipmentSimple> getAllEquipmentSimple() {
+        String sqlString = "SELECT\n" +
+                "  equipment.equipment_id,\n" +
+                "  equipment.asset_number\n" +
+                "FROM equipment";
+
+        Query query =
+                _em.createNativeQuery(sqlString, Equipment.ALL_EQUIPMENT_SIMPLE);
+
+        //noinspection unchecked
+        List<EquipmentSimple> signals = (List<EquipmentSimple>) query.getResultList();
+        return ImmutableList.copyOf(signals);
     }
 }

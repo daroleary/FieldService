@@ -71,13 +71,28 @@ public class SignalBean extends EJB3Adapter<SignalPk, Signal> implements SignalL
     }
 
     @Override
+    public ImmutableList<DailySignal> getDailySignalsFrom() {
+        return getSignalsFrom(DailySignal.class, EquipmentPk.getPKorNull(null));
+    }
+
+    @Override
     public ImmutableList<DailySignal> getDailySignalsFrom(Long equipmentId) {
         return getSignalsFrom(DailySignal.class, equipmentId);
     }
 
     @Override
+    public ImmutableList<MonthlySignal> getMonthlySignalsFrom() {
+        return getSignalsFrom(MonthlySignal.class, EquipmentPk.getPKorNull(null));
+    }
+
+    @Override
     public ImmutableList<MonthlySignal> getMonthlySignalsFrom(Long equipmentId) {
         return getSignalsFrom(MonthlySignal.class, equipmentId);
+    }
+
+    @Override
+    public ImmutableList<YearlySignal> getYearlySignalsFrom() {
+        return getSignalsFrom(YearlySignal.class, EquipmentPk.getPKorNull(null));
     }
 
     @Override
@@ -120,24 +135,24 @@ public class SignalBean extends EJB3Adapter<SignalPk, Signal> implements SignalL
     private StringBuilder getDailySignals(EquipmentPk equipmentPk) {
         StringBuilder sqlString = new StringBuilder();
         sqlString.append("SELECT\n" +
-                                  "  COUNT(status_code) status_code_count,\n" +
-                                  "  field_signal.equipment_id,\n" +
-                                  "  field_signal.status_code,\n" +
-                                  "  DATE(entry_date_time) entry_date\n" +
-                                  "FROM field_signal\n" +
-                                  "WHERE 1=1\n");
+                                 "  COUNT(status_code) status_code_count,\n" +
+                                 "  field_signal.equipment_id,\n" +
+                                 "  field_signal.status_code,\n" +
+                                 "  DATE(entry_date_time) entry_date\n" +
+                                 "FROM field_signal\n" +
+                                 "WHERE 1=1\n");
         if (equipmentPk != null) {
             sqlString.append("AND field_signal.equipment_id = :equipmentId\n");
         }
 
         sqlString.append("GROUP BY\n" +
-                                  "  field_signal.equipment_id,\n" +
-                                  "  field_signal.status_code,\n" +
-                                  "  entry_date\n" +
-                                  "ORDER BY\n" +
-                                  "  entry_date,\n" +
-                                  "  field_signal.status_code,\n" +
-                                  "  field_signal.equipment_id\n");
+                                 "  field_signal.equipment_id,\n" +
+                                 "  field_signal.status_code,\n" +
+                                 "  entry_date\n" +
+                                 "ORDER BY\n" +
+                                 "  entry_date,\n" +
+                                 "  field_signal.status_code,\n" +
+                                 "  field_signal.equipment_id\n");
         return sqlString;
     }
 
