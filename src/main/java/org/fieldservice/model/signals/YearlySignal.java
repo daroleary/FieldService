@@ -5,10 +5,9 @@ public class YearlySignal extends Signals {
     private int _year;
 
     public YearlySignal(int statusCodeCount,
-                        Long equipmentId,
                         String equipmentStatus,
                         short year) {
-        super(statusCodeCount, equipmentId, equipmentStatus);
+        super(statusCodeCount, equipmentStatus);
         _year = year;
     }
 

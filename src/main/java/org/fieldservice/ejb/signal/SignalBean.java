@@ -136,7 +136,6 @@ public class SignalBean extends EJB3Adapter<SignalPk, Signal> implements SignalL
         StringBuilder sqlString = new StringBuilder();
         sqlString.append("SELECT\n" +
                                  "  COUNT(status_code) status_code_count,\n" +
-                                 "  field_signal.equipment_id,\n" +
                                  "  field_signal.status_code,\n" +
                                  "  DATE(entry_date_time) entry_date\n" +
                                  "FROM field_signal\n" +
@@ -146,13 +145,11 @@ public class SignalBean extends EJB3Adapter<SignalPk, Signal> implements SignalL
         }
 
         sqlString.append("GROUP BY\n" +
-                                 "  field_signal.equipment_id,\n" +
                                  "  field_signal.status_code,\n" +
                                  "  entry_date\n" +
                                  "ORDER BY\n" +
                                  "  entry_date,\n" +
-                                 "  field_signal.status_code,\n" +
-                                 "  field_signal.equipment_id\n");
+                                 "  field_signal.status_code\n");
         return sqlString;
     }
 
@@ -160,7 +157,6 @@ public class SignalBean extends EJB3Adapter<SignalPk, Signal> implements SignalL
         StringBuilder sqlString = new StringBuilder();
         sqlString.append("SELECT\n" +
                                  "  count(status_code) status_code_count,\n" +
-                                 "  field_signal.equipment_id,\n" +
                                  "  status_code,\n" +
                                  "  entry_year,\n" +
                                  "  entry_month\n" +
@@ -171,15 +167,13 @@ public class SignalBean extends EJB3Adapter<SignalPk, Signal> implements SignalL
         }
 
         sqlString.append("GROUP BY\n" +
-                                 "  field_signal.equipment_id,\n" +
                                  "  field_signal.status_code,\n" +
                                  "  field_signal.entry_year,\n" +
                                  "  field_signal.entry_month\n" +
                                  "ORDER BY\n" +
                                  "  field_signal.entry_year,\n" +
                                  "  field_signal.entry_month,\n" +
-                                 "  field_signal.status_code,\n" +
-                                 "  field_signal.equipment_id\n");
+                                 "  field_signal.status_code\n");
         return sqlString;
     }
 
@@ -187,7 +181,6 @@ public class SignalBean extends EJB3Adapter<SignalPk, Signal> implements SignalL
         StringBuilder sqlString = new StringBuilder();
         sqlString.append("SELECT\n" +
                                  "  count(status_code) status_code_count,\n" +
-                                 "  field_signal.equipment_id,\n" +
                                  "  status_code,\n" +
                                  "  entry_year\n" +
                                  "FROM field_signal\n" +
@@ -197,13 +190,11 @@ public class SignalBean extends EJB3Adapter<SignalPk, Signal> implements SignalL
         }
 
         sqlString.append("GROUP BY\n" +
-                                 "  field_signal.equipment_id,\n" +
                                  "  field_signal.status_code,\n" +
                                  "  field_signal.entry_year\n" +
                                  "ORDER BY\n" +
                                  "  field_signal.entry_year,\n" +
-                                 "  field_signal.status_code,\n" +
-                                 "  field_signal.equipment_id\n");
+                                 "  field_signal.status_code\n");
         return sqlString;
     }
 }

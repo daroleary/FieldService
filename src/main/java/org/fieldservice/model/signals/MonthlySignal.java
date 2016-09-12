@@ -8,11 +8,10 @@ public class MonthlySignal extends Signals {
     private int _year;
 
     public MonthlySignal(int statusCodeCount,
-                         Long equipmentId,
                          String equipmentStatus,
                          int month,
                          short year) {
-        super(statusCodeCount, equipmentId, equipmentStatus);
+        super(statusCodeCount, equipmentStatus);
 
         //TODO: add validation to these classes
         _month = Month.of(month);

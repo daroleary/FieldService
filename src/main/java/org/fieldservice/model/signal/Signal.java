@@ -41,7 +41,6 @@ import java.util.Date;
                                 targetClass = DailySignal.class,
                                 columns = {
                                         @ColumnResult(name = "status_code_count", type = Integer.class),
-                                        @ColumnResult(name = "equipment_id", type = Long.class),
                                         @ColumnResult(name = "status_code", type = String.class),
                                         @ColumnResult(name = "entry_date", type = Date.class),
                                 }
@@ -55,7 +54,6 @@ import java.util.Date;
                                 targetClass = MonthlySignal.class,
                                 columns = {
                                         @ColumnResult(name = "status_code_count", type = Integer.class),
-                                        @ColumnResult(name = "equipment_id", type = Long.class),
                                         @ColumnResult(name = "status_code", type = String.class),
                                         @ColumnResult(name = "entry_month", type = Integer.class),
                                         @ColumnResult(name = "entry_year", type = Short.class),
@@ -70,7 +68,6 @@ import java.util.Date;
                                 targetClass = YearlySignal.class,
                                 columns = {
                                         @ColumnResult(name = "status_code_count", type = Integer.class),
-                                        @ColumnResult(name = "equipment_id", type = Long.class),
                                         @ColumnResult(name = "status_code", type = String.class),
                                         @ColumnResult(name = "entry_year", type = Short.class),
                                 }

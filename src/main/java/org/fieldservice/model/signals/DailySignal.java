@@ -7,10 +7,9 @@ public class DailySignal extends Signals {
     private Date _entryDate;
 
     public DailySignal(int statusCodeCount,
-                       Long equipmentId,
                        String equipmentStatus,
                        Date entryDate) {
-        super(statusCodeCount, equipmentId, equipmentStatus);
+        super(statusCodeCount, equipmentStatus);
         _entryDate = entryDate;
     }
 
